@@ -413,6 +413,7 @@ def score_pair_fin_gap(sequence_1, sequence_2, h =10, s = 1 ):
             elif state.open == True and state.side == 2:
                 score = score - s
         else:
+            #else both are "-", we will not penalize in this case. 
             # print("error, both are gaps")
             pass
     
@@ -449,35 +450,36 @@ def get_consensus_sequence(multiple_alignment):
 
 
 def main():
-    # matrix = createMatrix(len(sequences), len(sequences), "shutong")
-    # matrix_V = createMatrix(len(sequences), len(sequences), "shu")
+    matrix = createMatrix(len(sequences), len(sequences), "shutong")
+    matrix_V = createMatrix(len(sequences), len(sequences), "shu")
 
-    # print("Please wait while the program is calculating the distance matrix...")
-    # # t1 = "MGEIG"
-    # # t2 = "GEMEI"
-    # # optimal_cell, V,E,F,G = alignment_affine_gap( t1, t2,blosum62_matrix, h =10, s = 1, horizontal =  False)
-    # # print(optimal_cell)
-    # for i in range(len(sequences)):
-    #     for j in range(len(sequences)):
-    #         if i != j:
-    #             optimal_cell, V = alignment_affine_gap( sequences[i], sequences[j], h =10, s = 1, horizontal =  False)
-    #             matrix[i][j] = optimal_cell.score
-    #             matrix_V[i][j] = V
-    #         else:
-    #             matrix[i][j] = 0
-    #             matrix_V[i][j] = None
+    print("Please wait while the program is calculating the distance matrix...")
+    # t1 = "MGEIG"
+    # t2 = "GEMEI"
+    # optimal_cell, V,E,F,G = alignment_affine_gap( t1, t2,blosum62_matrix, h =10, s = 1, horizontal =  False)
+    # print(optimal_cell)
+    for i in range(len(sequences)):
+        for j in range(len(sequences)):
+            if i != j:
+                optimal_cell, V = alignment_affine_gap( sequences[i], sequences[j], h =10, s = 1, horizontal =  False)
+                matrix[i][j] = optimal_cell.score
+                matrix_V[i][j] = V
+            else:
+                matrix[i][j] = 0
+                matrix_V[i][j] = None
 
-    #     print(matrix[i])
+        print(matrix[i])
     
     # with open("matrix.pickle", "wb") as f:
     #     pickle.dump(matrix, f)
     # with open("matrix_V.pickle", "wb") as f:
     #     pickle.dump(matrix_V, f)
-    with open("matrix.pickle", "rb") as f:
-        matrix = pickle.load(f)
-    with open("matrix_V.pickle", "rb") as f:
-        matrix_V = pickle.load(f)
-
+    # with open("matrix.pickle", "rb") as f:
+    #     matrix = pickle.load(f)
+    # with open("matrix_V.pickle", "rb") as f:
+    #     matrix_V = pickle.load(f)
+    
+    # print(matrix)
     
 
     sequence_central_index = find_central_sequence_index(matrix)
@@ -514,10 +516,22 @@ def main():
         print(sequence)
     
     print("########################################################")
-    print("the SP score is", score_SP(multiple_alignment)) ## 这里带点说法,明天助教课问下
+    print("the SP score is", score_SP(multiple_alignment)) 
     print("########################################################")
     print("########################################################")
     print("the consensus sequence is", get_consensus_sequence(multiple_alignment))
+    print("########################################################")
+
+
+    # these sequences are alignment obtained by online bio informatics tool 
+    s1 = "----------------MVLSAADKNNVKGIFTKIAGHAEEYGAETLERMFTTYPPTKTYFPHFDLS-H------GSAQIKGHGKKVVAALIE------AANHIDDIAGTLSKLSDLHAHKLRVDPVNFKLLGQCFLVVVAIHHPAALTPEVHASLDKFLCAVGTVLTAKYR-----------------------" 
+    s2 = "MEKVPGEMEIERRERSEELSEAERKAVQATWARLYANCEDVGVAILVRFFVNFPSAKQYFSQFKHM-EEPLEMERSPQLRKHACRVMGALNTVV---ENLHDPEKVSSVLSLVGKAHALKHKVEPVYFKILSGVILEVIAEEFANDFPPETQRAWAKLRGLIYSHVTAAYKEVGWVQQVPNATTPPATLPSSGP"
+    s3 = "----------------MGLSDGEWQLVLNVWGKVEADIPGHGQEVLIRLFKGHPETLEKFDKFKHL-KSEDEMKASEDLKKHGATVLTALGGIL---KKKGHH---EAEIKPLAQSHATKHKIPVKYLEFISECIIQVLQSKHPGDFGADAQGAMNKALELFRKDMASNYKELGFQG-----------------"
+    s4 = "-------------MGEIGFTEKQEALVKESWEILKQDIPKYSLHFFSQILEIAPAAKGLFSFLRDSDEVPHN---NPKLKAHAVKVFKMTCETAIQLREEGKVVVADTTLQYLGSIHLK-SGVIDPHFEVVKEALLRTLKEGLGEKYNEEVEGAWSQAYDHLALAIKTE-----MKQEES--------------"
+    s5 = "------------------MERLESELIRQSWRAVSRSPLEHGTVLFSRLFALEPSLLPLFQYNGRQFSSPEDCLSSPEFLDHIRKVMLVID-AA--VTNVEDLSSLEEYLATLGRKHRA-VGVRLSSFSTVGESLLYMLEKCLGPDFTPATRTAWSQLYGAVVQAMSRG-----WDGE----------------"
+    alignment_outil = [s1,s2,s3,s4,s5]
+    print("########################################################")
+    print("the SP score of the alignment got by online tools is", score_SP(alignment_outil)) 
     print("########################################################")
 
 
